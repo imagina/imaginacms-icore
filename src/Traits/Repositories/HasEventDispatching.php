@@ -37,7 +37,7 @@ trait HasEventDispatching
         if (!empty($dispatchesEvents[$eventName])) {
             foreach ($dispatchesEvents[$eventName] as $event) {
                 $moduleName = explode("\\", $event['path'])[1] ?? null;
-                if ($moduleName && Module::isEnabled($moduleName)) {
+                if ($moduleName && Module::find($moduleName) && Module::isEnabled($moduleName)) {
                     event(new $event['path']([
                         'data' => $data,
                         'extraData' => $event['extraData'] ?? [],
