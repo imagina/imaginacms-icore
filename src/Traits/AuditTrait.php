@@ -12,7 +12,7 @@ trait AuditTrait
      * @param bool
      */
     public $userstamping = true;
-    public $useAudit = true;
+    public $useAudit = false;
 
     public static function bootAuditTrait()
     {

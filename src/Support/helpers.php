@@ -28,7 +28,7 @@ if (!function_exists('isModuleEnabled')) {
 
     function isModuleEnabled(string $moduleName): bool
     {
-        return Module::isEnabled($moduleName);
+        return Module::find($moduleName) && Module::isEnabled($moduleName);
     }
 }
 
