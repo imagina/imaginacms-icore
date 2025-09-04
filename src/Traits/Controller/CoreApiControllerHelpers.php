@@ -18,8 +18,8 @@ trait CoreApiControllerHelpers
     {
         return (object)[
             'order' => $request->input('order'),
-            'page' => $request->input('page', 1),
-            'take' => $request->input('take', 12),
+            'page' => $request->input('page', null),
+            'take' => $request->input('take', null),
             'filter' => (object)(json_decode($request->input('filter', '[]'), true) ?? []),
             'include' => array_filter(explode(',', $request->input('include', '')), fn($val) => $val !== ''),
             'fields' => array_filter(explode(',', $request->input('fields', '')), fn($val) => $val !== ''),
