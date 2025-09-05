@@ -15,6 +15,7 @@ return [
   'recaptchaSecretKey' => [
     'name' => 'icore::recaptchaSecretKey',
     'default' => null,
+    'private' => true,
     'dynamicField' => [
       'type' => 'input',
       'columns' => 'col-12 col-md-6',
