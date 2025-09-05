@@ -74,8 +74,8 @@ trait HasQueryBuilderSupport
         if (!empty($filters->date)) {
             $query = FilterQueryBuilder::apply(
                 $query,
-                (object)['from' => $filters->date->from, 'to' => $filters->date->to, 'type' => 'date'],
-                $filters->date->field ?? 'created_at'
+                (object)['from' => $filters->date['from'], 'to' => $filters->date['to'], 'type' => 'date'],
+                $filters->date['field'] ?? 'created_at'
             );
         }
 
