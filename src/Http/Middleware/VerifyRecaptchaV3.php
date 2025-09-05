@@ -17,7 +17,7 @@ class VerifyRecaptchaV3
     }
 
     $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-      'secret'   => env('RECAPTCHA_SECRET'),
+      'secret'   => setting('icore::recaptchaSecretKey'),
       'response' => $token,
       'remoteip' => $request->ip(),
     ])->json();
