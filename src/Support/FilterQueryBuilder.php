@@ -37,7 +37,8 @@ class FilterQueryBuilder
 
     protected static function normalizeFilterValue(string $field, mixed $value): mixed
     {
-        if ($field === 'id' && !isset($value->where)) {
+        if ($field === 'id') {
+            if(isset($value->where)) return $value;
             return (object)['where' => 'in', 'value' => (array)$value];
         }
 
