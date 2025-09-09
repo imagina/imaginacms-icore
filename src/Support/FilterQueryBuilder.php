@@ -10,7 +10,7 @@ class FilterQueryBuilder
 {
     public static function apply(Builder $query, mixed $filterData, string|array $fieldName, ?Model $model = null): Builder
     {
-        $filterData = self::normalizeFilterValue($fieldName, $filterData);
+        $filterData = self::normalizeFilterValue($fieldName, (object)$filterData);
         $filterWhere = $filterData->where ?? null;
         $filterOperator = $filterData->operator ?? '=';
         $filterValue = $filterData->value ?? $filterData;
@@ -38,7 +38,7 @@ class FilterQueryBuilder
     protected static function normalizeFilterValue(string $field, mixed $value): mixed
     {
         if ($field === 'id') {
-            if(isset($value->where)) return $value;
+            if(isset($value->where)) return (object)$value;
             return (object)['where' => 'in', 'value' => (array)$value];
         }
 
