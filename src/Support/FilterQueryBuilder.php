@@ -10,7 +10,7 @@ class FilterQueryBuilder
 {
     public static function apply(Builder $query, mixed $filterData, string|array $fieldName, ?Model $model = null): Builder
     {
-        $filterData = self::normalizeFilterValue($fieldName, (object)$filterData);
+        $filterData = self::normalizeFilterValue($fieldName, $filterData);
         $filterWhere = $filterData->where ?? null;
         $filterOperator = $filterData->operator ?? '=';
         $filterValue = $filterData->value ?? $filterData;
@@ -37,8 +37,9 @@ class FilterQueryBuilder
 
     protected static function normalizeFilterValue(string $field, mixed $value): mixed
     {
+
         if ($field === 'id') {
-            if(isset($value->where)) return (object)$value;
+            if(isset($value['where'])) return (object)$value;
             return (object)['where' => 'in', 'value' => (array)$value];
         }
 
@@ -46,9 +47,9 @@ class FilterQueryBuilder
             return (object)['where' => 'null'];
         }
 
-        if (isset($value->type) && $value->type === 'date') {
-            $start = Carbon::parse($value->from)->startOfDay(); // 2021-06-01 00:00:00
-            $end = Carbon::parse($value->to)->endOfDay();     // 2021-06-01 23:59:59
+        if (isset($value['type']) && $value['type'] === 'date') {
+            $start = Carbon::parse($value['from'])->startOfDay(); // 2021-06-01 00:00:00
+            $end = Carbon::parse($value['to'])->endOfDay();     // 2021-06-01 23:59:59
             return (object)['where' => 'between', 'value' => [$start, $end]];
         }
 
