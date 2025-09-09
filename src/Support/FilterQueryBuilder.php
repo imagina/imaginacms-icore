@@ -37,9 +37,9 @@ class FilterQueryBuilder
 
     protected static function normalizeFilterValue(string $field, mixed $value): mixed
     {
-
+        $value = is_array($value) ? (object)$value : $value;
         if ($field === 'id') {
-            if(isset($value['where'])) return (object)$value;
+            if(isset($value->where)) return $value;
             return (object)['where' => 'in', 'value' => (array)$value];
         }
 
@@ -47,13 +47,13 @@ class FilterQueryBuilder
             return (object)['where' => 'null'];
         }
 
-        if (isset($value['type']) && $value['type'] === 'date') {
-            $start = Carbon::parse($value['from'])->startOfDay(); // 2021-06-01 00:00:00
-            $end = Carbon::parse($value['to'])->endOfDay();     // 2021-06-01 23:59:59
+        if (isset($value->type) && $value->type === 'date') {
+            $start = Carbon::parse($value->from)->startOfDay(); // 2021-06-01 00:00:00
+            $end = Carbon::parse($value->to)->endOfDay();     // 2021-06-01 23:59:59
             return (object)['where' => 'between', 'value' => [$start, $end]];
         }
 
-        if (is_array($value) && !isset($value['where'])) {
+        if (is_array($value) && !isset($value->where)) {
             return (object)['where' => 'in', 'value' => $value];
         }
 
