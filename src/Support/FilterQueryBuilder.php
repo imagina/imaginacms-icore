@@ -37,7 +37,9 @@ class FilterQueryBuilder
 
     protected static function normalizeFilterValue(string $field, mixed $value): mixed
     {
+        $value = is_array($value) ? (object)$value : $value;
         if ($field === 'id') {
+            if(isset($value->where)) return $value;
             return (object)['where' => 'in', 'value' => (array)$value];
         }
 
@@ -51,7 +53,7 @@ class FilterQueryBuilder
             return (object)['where' => 'between', 'value' => [$start, $end]];
         }
 
-        if (is_array($value) && !isset($value['where'])) {
+        if (is_array($value) && !isset($value->where)) {
             return (object)['where' => 'in', 'value' => $value];
         }
 
