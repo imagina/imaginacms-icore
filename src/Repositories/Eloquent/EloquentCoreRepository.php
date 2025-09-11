@@ -185,7 +185,7 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
         $model = $query->where($field ?? 'id', $criteria)->first();
         if (isset($model)) {
             $data['id'] = $model->id;
-            $this->beforeUpdate($data);
+            $this->beforeUpdate($model, $data);
             // Update attributes
             $nonColumnAttributes = ['medias_single', 'medias_multi'];
             $fillableData = collect($data)->except($nonColumnAttributes)->toArray();
@@ -292,7 +292,7 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
         $orderField = $params->filter->field ?? 'sort_order';
         //loop through data to update the position according to index data
         foreach ($data as $item) {
-          $this->updateBy($item['id'], [$orderField => $item[$orderField]]);
+            $this->updateBy($item['id'], [$orderField => $item[$orderField]]);
         }
         //Response
         return $this->getItemsBy((object)['filter' => (object)['id' => array_column($data, "id")]]);

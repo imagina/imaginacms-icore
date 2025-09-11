@@ -54,33 +54,25 @@ trait HasExtensionPoints
      * @param array $data
      * @return void
      */
-    protected function beforeCreate(array &$data): void
-    {
-    }
+    protected function beforeCreate(array &$data): void {}
 
     /**
      * @param Model $model
      * @param array $data
      * @return void
      */
-    protected function afterCreate(Model &$model, array &$data): void
-    {
-    }
+    protected function afterCreate(Model &$model, array &$data): void {}
 
     /**
      * @param $data
      * @return void
      */
-    protected function beforeUpdate(&$data): void
-    {
-    }
+    protected function beforeUpdate(&$model, &$data): void {}
 
     /**
      * @param $model
      * @param $data
      * @return void
      */
-    protected function afterUpdate(&$model, &$data): void
-    {
-    }
+    protected function afterUpdate(&$model, &$data): void {}
 }
