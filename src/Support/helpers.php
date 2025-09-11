@@ -112,7 +112,7 @@ if (!function_exists('fetchConversionRates')) {
   function fetchConversionRates()
   {
     $response = Http::withHeaders(['app_token' => env('IMAGINA_RATES_TOKEN')])
-      ->get(config('isite.urlConversionRate'));
+      ->get(config('icore.urlConversionRate'));
 
     if ($response->successful()) {
       return $response->json();
