@@ -124,10 +124,14 @@ if (!function_exists('fetchConversionRates')) {
 }
 
 if (!function_exists('urlFrontend')) {
-  function urlFrontend($path)
+  function urlFrontend($path = null)
   {
     $base = rtrim(env('FRONTEND_URL', ''), '/');
     if (!$base) return 'Frontend-URL not configured in .env';
-    return $base . '/' . ltrim($path, '/');
+
+    if (is_null($path) || empty($path))
+      return $base;
+    else
+      return $base . '/' . ltrim($path, '/');
   }
 }
