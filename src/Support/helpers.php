@@ -122,3 +122,12 @@ if (!function_exists('fetchConversionRates')) {
     return [];
   }
 }
+
+if (!function_exists('urlFrontend')) {
+  function urlFrontend($path)
+  {
+    $base = rtrim(env('FRONTEND_URL', ''), '/');
+    if (!$base) return 'Frontend-URL not configured in .env';
+    return $base . '/' . ltrim($path, '/');
+  }
+}
