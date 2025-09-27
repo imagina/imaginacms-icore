@@ -17,7 +17,7 @@ trait CoreApiControllerHelpers
     public function getParamsRequest(Request $request): object
     {
         return (object)[
-            'order' => $request->input('order'),
+            'order' => (object)(json_decode($request->input('order', '[]'), true) ?? []),
             'page' => $request->input('page', null),
             'take' => $request->input('take', null),
             'filter' => (object)(json_decode($request->input('filter', '[]'), true) ?? []),
