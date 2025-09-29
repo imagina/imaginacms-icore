@@ -146,6 +146,34 @@ abstract class CoreApiController
         return response()->json($response, $status ?? Response::HTTP_OK);
     }
 
+    public function updateOrCreate(Request $request): JsonResponse
+    {
+      DB::beginTransaction();
+      try {
+        //Get model data
+        $match = $request->input('match') ?? [];
+        $attributes = $request->input('attributes') ?? [];
+
+        //Validate Request
+        $this->validateWithModelRules($attributes, 'create');
+
+        //Update model
+        $model = $this->modelRepository->updateOrCreate($match, $attributes);
+
+        //Response
+        $response = ['data' => CoreResource::transformData($model)];
+        DB::commit(); //Commit to DataBase
+      } catch (Exception $e) {
+        DB::rollback(); //Rollback to Data Base
+        [$status, $response] = $this->getErrorResponse($e);
+      }
+
+      //Return response
+      return response()->json($response, $status ?? Response::HTTP_OK);
+    }
+
+
+
     /**
      * Controller to delete model by criteria
      *

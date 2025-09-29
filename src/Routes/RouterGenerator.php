@@ -97,6 +97,15 @@ class RouterGenerator
                     'middleware' => $this->getApiRouteMiddleware('dashboard', $params)
                 ],
             ],
+            (object)[ //Route Update or Create
+              'method' => 'put',
+              'path' => '/upsert',
+              'actions' => [
+                'as' => "api.{$params['module']}.{$params['prefix']}.updateOrCreate",
+                'uses' => $params['controller'] . '@updateOrCreate',
+                'middleware' => $this->getApiRouteMiddleware('updateOrCreate', $params)
+              ],
+            ],
             (object)[ //Route Update
                 'method' => 'put',
                 'path' => '/{criteria}',
