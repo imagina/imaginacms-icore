@@ -35,6 +35,7 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
     {
         $params = $params ?? (object)[];
         $filters = (object)($params->filter ?? []);
+        $params->context = 'index';
 
         // Build the query
         if (!$query) {
@@ -85,6 +86,7 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
     {
         $params = $params ?? (object)[];
         $filters = (object)($params->filter ?? []);
+        $params->context = 'show';
 
         if (!$query) {
             $query = $this->model->query();
