@@ -15,6 +15,7 @@ use Imagina\Icore\Traits\Repositories\HasQueryBuilderSupport;
 use Imagina\Icore\Traits\Repositories\HasEventDispatching;
 
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Str;
 
 /* TODO : check media event
 use Modules\helpers\Events\CreateMedia;
@@ -340,9 +341,17 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
      */
     public function updateOrCreate(array $validation, array $data): Model
     {
+        //Convert to camelCase to search model
+        $camelData = [];
+        foreach ($validation as $key => $value) {
+            $camelData[Str::camel($key)] = $value;
+        }
+
+
         //Search the record
-        $model = $this->getItemsBy((object)['filter' => (object)$validation])->first();
+        $model = $this->getItemsBy((object)['filter' => (object)$camelData])->first();
         $modelData = array_merge($validation, $data);
+
         //update Or Create the record
         if ($model) $model = $this->updateBy($model->id, $modelData);
         else $model = $this->create($modelData);
