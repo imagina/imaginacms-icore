@@ -88,6 +88,10 @@ trait HasQueryBuilderSupport
         if (isset($filters->withoutTenancy)) {
             $query->withoutTenancy();
         }
+        //Only if not replacing by other repository
+        if (in_array('search', $filterKeys)) {
+            $this->addFilterSearch($query, $filters, $modelFillable, $translatableAttributes);
+        }
 
         return $this->filterQuery($query, $filters, $params);
     }
@@ -135,5 +139,46 @@ trait HasQueryBuilderSupport
         return false;
         //TODO: check softDeletes trait
         //return in_array(SoftDeletes::class, class_uses_recursive($this->model));
+    }
+
+    /**
+     * Summary of addFilterSearch
+     */
+    private function addFilterSearch(&$query, $filters, $modelFillable, $translatableAttributes)
+    {
+
+        $searchValue = $filters->search;
+        $like = '%' . $searchValue . '%';
+
+        //Get Attributes to search
+        $searchable = array_unique(array_merge($this->model->searchable ?? [], ['id', 'title']));
+
+        // Separar campos traducibles y no traducibles
+        $transCols = array_values(array_intersect($searchable, $translatableAttributes));
+        $nonTransCols = array_values(array_intersect($searchable, $modelFillable));
+
+        $query->where(function ($q) use ($transCols, $nonTransCols, $like, $searchValue) {
+            //Campos no traducibles (LIKE)
+            foreach ($nonTransCols as $col) {
+                $q->orWhere($col, 'LIKE', $like);
+            }
+
+            // 1b) id exacto cuando el término es numérico (mejora uso de índice)
+            if (ctype_digit((string)$searchValue)) {
+                $q->orWhere('id', (int)$searchValue);
+            }
+
+            //Campos traducibles: un solo whereHas con un OR interno
+            if (!empty($transCols)) {
+                $q->orWhereHas('translations', function ($qt) use ($transCols, $like) {
+                    $qt->where('locale', app()->getLocale())
+                        ->where(function ($qt2) use ($transCols, $like) {
+                            foreach ($transCols as $col) {
+                                $qt2->orWhere($col, 'LIKE', $like);
+                            }
+                        });
+                });
+            }
+        });
     }
 }
