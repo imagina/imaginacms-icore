@@ -250,10 +250,12 @@ abstract class EloquentCoreRepository extends EloquentBaseRepository implements 
 
         //Delete Model
         if ($model) {
+            $this->beforeDelete($model);
             if (isset($params->filter->forceDelete) && $this->hasSoftDeletes()) $model->forceDelete();
             else $model->delete();
         }
 
+        $this->afterDelete($model);
         //Event deleted model
         $this->dispatchesEvents(['eventName' => 'deleted', 'criteria' => $criteria]);
 
